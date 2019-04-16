@@ -1,6 +1,6 @@
 import Foundation
 import Swish
-import Result
+
 
 enum ResponseData {
   case data(Data)

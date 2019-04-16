@@ -1,5 +1,5 @@
 import Foundation
-import Result
+
 
 public protocol RequestPerformer {
   @discardableResult

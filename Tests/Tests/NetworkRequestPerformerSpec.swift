@@ -1,7 +1,7 @@
 import Swish
 import Quick
 import Nimble
-import Result
+
 
 func exampleRequest() -> URLRequest {
   return URLRequest(url: URL(string: "https://example.com")!)
@@ -38,8 +38,8 @@ class RequestPerformerSpec: QuickSpec {
 
             let performer = NetworkRequestPerformer(session: fakeSession)
             performer.perform(exampleRequest()) { result in
-              returnedCode = result.value!.code
-              returnedData = result.value!.data
+              returnedCode = try! result.get().code
+              returnedData = try! result.get().data
             }
 
             expect(returnedCode).to(equal(200))
@@ -55,7 +55,9 @@ class RequestPerformerSpec: QuickSpec {
 
             let performer = NetworkRequestPerformer(session: fakeSession)
             performer.perform(exampleRequest()) { result in
-              returnedError = result.error
+              if case .failure(let e) = result {
+                returnedError = e
+              }
             }
 
             expect(returnedError).to(matchError(SwishError.urlSessionError(error, response: nil)))

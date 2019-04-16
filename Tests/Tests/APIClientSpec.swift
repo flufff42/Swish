@@ -1,7 +1,7 @@
 import Swish
 import Quick
 import Nimble
-import Result
+
 
 class APIClientSpec: QuickSpec {
   override func spec() {
@@ -33,7 +33,7 @@ class APIClientSpec: QuickSpec {
 
                 client.perform(request) { result = $0 }
 
-                expect(result?.value).toEventually(equal("hello world"))
+                expect(try! result?.get()).toEventually(equal("hello world"))
               }
             }
 
@@ -48,7 +48,9 @@ class APIClientSpec: QuickSpec {
                 var error: Error?
 
                 client.perform(request) {
-                  error = $0.error
+                  if case .failure(let e) = $0 {
+                    error = e
+                  }
                 }
 
                 expect(error).toEventually(matchError(SwishError.self))
@@ -67,7 +69,7 @@ class APIClientSpec: QuickSpec {
 
                 client.perform(request) { result = $0 }
 
-                expect(result?.value).toEventually(beVoid())
+                expect(try! result?.get()).toEventually(beVoid())
               }
             }
 
@@ -83,7 +85,7 @@ class APIClientSpec: QuickSpec {
 
                 client.perform(request) { result = $0 }
 
-                expect(result?.value).toEventually(beVoid())
+                expect(try! result?.get()).toEventually(beVoid())
               }
             }
           }
@@ -122,7 +124,9 @@ class APIClientSpec: QuickSpec {
           var error: SwishError?
 
           client.perform(request) {
-            error = $0.error
+            if case .failure(let e) = $0 {
+              error = e
+            }
           }
 
           expect(error).toEventually(matchError(SwishError.serverError(code: expectedCode, data: performer.data)))
@@ -143,7 +147,9 @@ class APIClientSpec: QuickSpec {
           var error: SwishError?
 
           client.perform(request) {
-            error = $0.error
+            if case .failure(let e) = $0 {
+              error = e
+            }
           }
 
           expect(error).toEventually(matchError(SwishError.serverError(code: expectedCode, data: performer.data)))
@@ -164,7 +170,9 @@ class APIClientSpec: QuickSpec {
           var error: SwishError?
 
           client.perform(request) {
-            error = $0.error
+            if case .failure(let e) = $0 {
+                    error = e
+                  }
           }
 
           expect(error).toEventually(matchError(SwishError.serverError(code: expectedCode, data: performer.data)))
@@ -185,7 +193,9 @@ class APIClientSpec: QuickSpec {
           var error: SwishError?
 
           client.perform(request) {
-            error = $0.error
+            if case .failure(let e) = $0 {
+              error = e
+            }
           }
 
           expect(error).toEventually(matchError(SwishError.serverError(code: expectedCode, data: performer.data)))

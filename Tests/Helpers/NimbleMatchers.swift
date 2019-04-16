@@ -1,8 +1,8 @@
 import Nimble
-import Result
 
-public func beVoid() -> MatcherFunc<Void> {
-  return MatcherFunc { actualExpression, failureMessage in
+
+public func beVoid() -> Predicate<Void> {
+  return Predicate.fromDeprecatedClosure { actualExpression, failureMessage in
     failureMessage.postfixMessage = "equal ()"
 
     let actualValue: Void? = try actualExpression.evaluate()
@@ -13,8 +13,8 @@ public func beVoid() -> MatcherFunc<Void> {
   }
 }
 
-public func beSuccessful<T, E>() -> NonNilMatcherFunc<Result<T, E>> {
-  return NonNilMatcherFunc { actual, failure in
+public func beSuccessful<T, E>() -> Predicate<Result<T, E>> {
+  return Predicate.fromDeprecatedClosure { actual, failure in
     let result = try actual.evaluate()
 
     switch result {
